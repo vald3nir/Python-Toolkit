@@ -51,8 +51,8 @@ class MongoDB:
     def delete_one(self, query: dict):
         self.collection.delete_one(query)
 
-    def delete_many(self, query: dict):
-        return self.collection.delete_many(query)
+    def delete_many(self, query: dict) -> int:
+        return self.collection.delete_many(query).deleted_count
 
     def distinct(self, key: str):
         return self.collection.distinct(key=key)
