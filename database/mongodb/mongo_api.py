@@ -1,3 +1,7 @@
+'''
+    DOC ref: https://www.mongodb.com/docs/atlas/app-services/data-api/examples/
+'''
+
 import json
 
 import curl
@@ -32,7 +36,15 @@ class MongoAPI:
             "dataSource": data_source
         }
 
-    def _run(self, payload: str, action: str) -> dict:
+    def _run_post_request(self, payload: str, action: str) -> str:
+        try:
+            url = self._api_url + action
+            response = requests.request("POST", url, headers=self._headers, data=payload)
+            return response.text
+        except Exception as e:
+            return str(e)
+
+    def _run_get_request(self, payload: str, action: str) -> dict:
         try:
             url = self._api_url + action
             response = requests.request("POST", url, headers=self._headers, data=payload)
@@ -46,10 +58,26 @@ class MongoAPI:
         except Exception as e:
             print(e)
 
+    def insert_one(self, document: dict) -> str:
+        _payload = self._base_payload
+        _payload["document"] = document
+        return self._run_post_request(payload=json.dumps(_payload), action="insertOne")
+
+    def insert_many(self, documents: list[dict]) -> str:
+        _payload = self._base_payload
+        _payload["documents"] = documents
+        return self._run_post_request(payload=json.dumps(_payload), action="insertMany")
+
+    def delete_many(self, query: dict = None) -> str:
+        _payload = self._base_payload
+        if query is not None:
+            _payload["filter"] = query
+        return self._run_post_request(payload=json.dumps(_payload), action="deleteMany")
+
     def find_one(self, query: dict):
         _payload = self._base_payload
         _payload["filter"] = query
-        return self._run(payload=json.dumps(_payload), action="findOne")
+        return self._run_get_request(payload=json.dumps(_payload), action="findOne")
 
     def find_many(self, query: dict = None, sort: dict = None, limit: int = None):
         _payload = self._base_payload
@@ -59,9 +87,9 @@ class MongoAPI:
             _payload["sort"] = sort
         if limit is not None:
             _payload["limit"] = limit
-        return self._run(payload=json.dumps(_payload), action="find")
+        return self._run_get_request(payload=json.dumps(_payload), action="find")
 
     def aggregate(self, pipeline: [dict]):
         _payload = self._base_payload
         _payload["pipeline"] = pipeline
-        return self._run(payload=json.dumps(_payload), action="aggregate")
+        return self._run_get_request(payload=json.dumps(_payload), action="aggregate")
