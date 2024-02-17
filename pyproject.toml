@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "python_toolkit_vald3nir"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="Valdenir Severino", email="vald3nir@gmail.com" },
 ]
@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/toolkit"]
 
 [project.urls]
 Homepage = "https://github.com/vald3nir/Python-Toolkit"

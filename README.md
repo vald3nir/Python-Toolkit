@@ -4,27 +4,25 @@ Collection of utility scripts for developing Python projects
 
 ## Overview
 
-    .
-    ├── requirements.txt
-    └── src
+    src
+    ├── __init__.py
+    └── toolkit
         ├── database
-        │   ├── firebase
-        │   │   ├── firebase.py
-        │   │   └── __init__.py
-        │   ├── __init__.py
-        │   ├── json
-        │   │   ├── collectionDB.py
-        │   │   └── __init__.py
-        │   ├── mongodb
-        │   │   ├── __init__.py
-        │   │   ├── mongo_api.py
-        │   │   ├── mongo_dao.py
-        │   │   └── __pycache__
-        │   └── __pycache__
+        │   ├── firebase
+        │   │   ├── firebase.py
+        │   │   └── __init__.py
+        │   ├── __init__.py
+        │   ├── json
+        │   │   ├── collectionDB.py
+        │   │   └── __init__.py
+        │   └── mongodb
+        │       ├── __init__.py
+        │       ├── mongo_api.py
+        │       └── mongo_dao.py
         ├── __init__.py
         ├── protocols
-        │   ├── __init__.py
-        │   └── mqtt.py
+        │   ├── __init__.py
+        │   └── mqtt.py
         └── utils
             ├── backup_utils.py
             ├── converter_utils.py
@@ -32,7 +30,6 @@ Collection of utility scripts for developing Python projects
             ├── date_utils.py
             ├── __init__.py
             ├── io_utils.py
-            ├── __pycache__
             └── string_utils.py
 
 
