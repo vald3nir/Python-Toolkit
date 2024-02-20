@@ -1,7 +1,9 @@
+import datetime
 from datetime import datetime
 from datetime import timezone
 
 import pytz
+from bson import ObjectId
 from pytz import timezone
 
 LOCAL_TIME_ZONE = 'America/Sao_Paulo'
@@ -28,3 +30,8 @@ def timestamp_to_date_string(timestamp: float, time_zone: str = LOCAL_TIME_ZONE)
 
 def get_current_year() -> int:
     return datetime.now().year
+
+
+def object_id_to_date(object_id: ObjectId) -> str:
+    timestamp = object_id.generation_time
+    return datetime.datetime.utcfromtimestamp(timestamp.timestamp()).strftime(DATE_FORMAT_UTC)

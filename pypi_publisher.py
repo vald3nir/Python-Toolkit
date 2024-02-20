@@ -1,6 +1,4 @@
-import subprocess
+from src.toolkit.publish import publish_package
 
 if __name__ == '__main__':
-    subprocess.run(["rm", "-rf", "dist"])
-    subprocess.run(["python3", "-m", "build"])
-    subprocess.run(["python3", "-m", "twine", "upload", "--repository", "pypi", "dist/*"])
+    publish_package(install_libs=False)
