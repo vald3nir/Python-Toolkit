@@ -19,7 +19,10 @@ class MongoDAO:
         self._db.insert_many(documents)
 
     def update_one(self, query: dict, values: dict):
-        self._db.update_one(query, update={"$set": values}, upsert=True)
+        self._db.update_one(query, update={"$set": values})
+   
+    def update_many(self, query: dict, values: dict):
+        self._db.update_many(query, update={"$set": values})
 
     def clear(self):
         self._db.drop()
@@ -54,12 +57,16 @@ def copy_databases(
         origin_database_name: str,
         origin_database_address: str,
         destination_database_name: str,
-        destination_database_address: str
+        destination_database_address: str,
+        collections: [str]
 ):
     origin = pymongo.MongoClient(origin_database_address)[origin_database_name]
     destination = pymongo.MongoClient(destination_database_address)[destination_database_name]
 
-    for collection in origin.list_collection_names():
+    if collections is None or len(collections) == 0:
+        collections = origin.list_collection_names()
+
+    for collection in collections:
         collections_cursor = origin[collection].find()
         clt = destination[collection]
         clt.drop()
