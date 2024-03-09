@@ -1,4 +1,3 @@
-import datetime
 from datetime import datetime
 from datetime import timezone
 
@@ -34,4 +33,4 @@ def get_current_year() -> int:
 
 def object_id_to_date(object_id: ObjectId) -> str:
     timestamp = object_id.generation_time
-    return datetime.datetime.utcfromtimestamp(timestamp.timestamp()).strftime(DATE_FORMAT_UTC)
+    return datetime.utcfromtimestamp(timestamp.timestamp()).strftime(DATE_FORMAT_UTC)

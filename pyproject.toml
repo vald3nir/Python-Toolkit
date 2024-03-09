@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "python_toolkit_vald3nir"
-version = "1.0.6"
+version = "1.0.8"
 authors = [
   { name="Valdenir Severino", email="vald3nir@gmail.com" },
 ]
@@ -23,7 +23,3 @@ packages = ["src/toolkit"]
 [project.urls]
 Homepage = "https://github.com/vald3nir/Python-Toolkit"
 Issues = "https://github.com/vald3nir/Python-Toolkit/issues"
-
-[pypi]
-username = "__token__"
-password = "pypi-AgEIcHlwaS5vcmcCJDBjYmU4OGNjLWU0NmItNDJmNC1iYjc2LWQzMWMyOTc2ZDhkMwACKlszLCJiMWQ0NTViMy0xYjI5LTRhYjQtOGNlZi0wN2QxMTY1YmEzZjEiXQAABiBYoQ0zY_W_zJe2wrMeWbhjhK5WLNaveQQDpqKSscy9ig"
