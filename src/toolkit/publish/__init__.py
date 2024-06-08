@@ -1,7 +1,7 @@
 import subprocess
 
 _user = "vald3nir"
-_password = "pypi-AgEIcHlwaS5vcmcCJDBjYmU4OGNjLWU0NmItNDJmNC1iYjc2LWQzMWMyOTc2ZDhkMwACKlszLCJiMWQ0NTViMy0xYjI5LTRhYjQtOGNlZi0wN2QxMTY1YmEzZjEiXQAABiBYoQ0zY_W_zJe2wrMeWbhjhK5WLNaveQQDpqKSscy9ig"
+_password = "pypi-AgEIcHlwaS5vcmcCJGQ1ZWFiNDJmLTg1N2QtNDAwNC1iYWUxLTNiYWEyYzk0NDFkNwACKlszLCJiMWQ0NTViMy0xYjI5LTRhYjQtOGNlZi0wN2QxMTY1YmEzZjEiXQAABiDHPAa6kCpCCvhijpUbz-tjzJwQ_su5Z4QrEikZci9-9g"
 
 
 def publish_package():

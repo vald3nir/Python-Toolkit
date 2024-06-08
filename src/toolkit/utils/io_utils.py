@@ -39,6 +39,7 @@ def write_json(file, data):
 
 def write_lines(file_path: str, lines: list[str]):
     try:
+        create_folder(os.path.dirname(file_path))
         f = open(file_path, "w")
         for line in lines:
             f.write(line)
