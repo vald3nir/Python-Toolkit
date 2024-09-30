@@ -6,8 +6,8 @@ import pandas as pd
 from . import date_utils as date_utils
 
 
-def get_dataset_name(file: str) -> str:
-    return file.split(os.sep)[-1:][0].replace(".csv", "")
+def get_dataset_name(file_csv: str) -> str:
+    return os.path.basename(file_csv).replace(".csv", "")
 
 
 def _frame_to_json(frame):
@@ -46,19 +46,6 @@ def normalize_column_value(file_csv, column, value):
     df = load_dataframe(file_csv)
     df[column][df[column] >= value] = value
     df.to_csv(file_csv, index=False)
-
-
-def normalize_column_date(df: pd.DataFrame, date_column_index) -> pd.DataFrame:
-    df[date_column_index] = pd.to_datetime(df[date_column_index], errors='coerce')
-    return df
-
-
-def sum_group_dataframe_by_date(df: pd.DataFrame, date_column_index, freq='60Min') -> pd.DataFrame:
-    return df.groupby(pd.Grouper(key=date_column_index, freq=freq)).sum().reset_index()
-
-
-def mean_group_dataframe_by_date(df: pd.DataFrame, date_column_index, freq='60Min') -> pd.DataFrame:
-    return df.groupby(pd.Grouper(key=date_column_index, freq=freq)).mean(numeric_only=True).reset_index()
 
 
 def dataframe_to_json(df: pd.DataFrame) -> list[dict]:
