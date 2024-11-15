@@ -6,8 +6,8 @@ import pandas as pd
 from . import date_utils as date_utils
 
 
-def get_dataset_name(file: str) -> str:
-    return file.split(os.sep)[-1:][0].replace(".csv", "")
+def get_dataset_name(file_csv: str) -> str:
+    return os.path.basename(file_csv).replace(".csv", "")
 
 
 def _frame_to_json(frame):
@@ -49,7 +49,7 @@ def normalize_column_value(file_csv, column, value):
 
 
 def normalize_column_date(df: pd.DataFrame, date_column_index) -> pd.DataFrame:
-    df[date_column_index] = pd.to_datetime(df[date_column_index], errors='coerce')
+    df[date_column_index] = pd.to_datetime(df[date_column_index], utc=True, format="%Y-%m-%dT%H:%M:%S.Z")
     return df
 
 
