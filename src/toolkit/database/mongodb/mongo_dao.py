@@ -20,7 +20,7 @@ class MongoDAO:
 
     def update_one(self, query: dict, values: dict):
         self._db.update_one(query, update={"$set": values})
-   
+
     def update_many(self, query: dict, values: dict):
         self._db.update_many(query, update={"$set": values})
 
@@ -53,13 +53,7 @@ class MongoDAO:
 # Extra Methods
 # ----------------------------------------------------------------------------------------------------------------------
 
-def copy_databases(
-        origin_database_name: str,
-        origin_database_address: str,
-        destination_database_name: str,
-        destination_database_address: str,
-        collections: [str]
-):
+def copy_databases(origin_database_name: str, origin_database_address: str, destination_database_name: str, destination_database_address: str, collections: [str], max_collection_size: int = 100000):
     origin = pymongo.MongoClient(origin_database_address)[origin_database_name]
     destination = pymongo.MongoClient(destination_database_address)[destination_database_name]
 
@@ -67,7 +61,7 @@ def copy_databases(
         collections = origin.list_collection_names()
 
     for collection in collections:
-        collections_cursor = origin[collection].find()
+        collections_cursor = origin[collection].find(limit=max_collection_size)
         clt = destination[collection]
         clt.drop()
         for document in collections_cursor:

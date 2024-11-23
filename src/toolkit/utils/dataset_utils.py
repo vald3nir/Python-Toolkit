@@ -48,19 +48,6 @@ def normalize_column_value(file_csv, column, value):
     df.to_csv(file_csv, index=False)
 
 
-def normalize_column_date(df: pd.DataFrame, date_column_index) -> pd.DataFrame:
-    df[date_column_index] = pd.to_datetime(df[date_column_index], utc=True, format="%Y-%m-%dT%H:%M:%S.Z")
-    return df
-
-
-def sum_group_dataframe_by_date(df: pd.DataFrame, date_column_index, freq='60Min') -> pd.DataFrame:
-    return df.groupby(pd.Grouper(key=date_column_index, freq=freq)).sum().reset_index()
-
-
-def mean_group_dataframe_by_date(df: pd.DataFrame, date_column_index, freq='60Min') -> pd.DataFrame:
-    return df.groupby(pd.Grouper(key=date_column_index, freq=freq)).mean(numeric_only=True).reset_index()
-
-
 def dataframe_to_json(df: pd.DataFrame) -> list[dict]:
     try:
         return json.loads(df.to_json(orient="records"))
