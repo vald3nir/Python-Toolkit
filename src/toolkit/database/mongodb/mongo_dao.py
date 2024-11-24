@@ -46,7 +46,7 @@ class MongoDAO:
         return self._db.distinct(key=key)
 
     def aggregate(self, pipeline: [dict]) -> list[dict]:
-        return list(self._db.aggregate(pipeline=pipeline))
+        return list(self._db.aggregate(pipeline=pipeline, maxTimeMS=60000, allowDiskUse=True))
 
 
 # ----------------------------------------------------------------------------------------------------------------------
