@@ -7,7 +7,8 @@ class MongoDAO:
 
     def __init__(self, client_url: str, project_name: str, collection: str) -> None:
         super().__init__()
-        self._db = pymongo.MongoClient(client_url)[project_name][collection]
+        self.client = pymongo.MongoClient(client_url)
+        self._db = self.client[project_name][collection]
 
     # ------------------------------------------------------------------------------------------------------------------
     # Implementations
@@ -51,9 +52,11 @@ class MongoDAO:
     def collection_size(self) -> int:
         return self._db.count_documents({})
 
-    # ----------------------------------------------------------------------------------------------------------------------
+    def close(self):
+        self.client.close()
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 # Extra Methods
 # ----------------------------------------------------------------------------------------------------------------------
 
