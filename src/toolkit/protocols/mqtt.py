@@ -1,73 +1,65 @@
-import random
+import paho.mqtt.client as mqtt
 
-import paho.mqtt.client as mqtt_client
-
-"""
-Library documentation: https://www.eclipse.org/paho/index.php?page=clients/python/docs/index.php
-"""
-
-
-def _on_connect(client, userdata, flags, rc):
-    print("client:", client, "userdata:", userdata, "flags:", flags, "code:", rc)
-    if rc == 0:
-        print("Connected to MQTT Broker!")
-    else:
-        print("Failed to connect")
-
-
-def _on_disconnect(client, userdata, rc):
-    print("client:", client, "userdata:", userdata, "code:", rc)
-    print("Unexpected disconnection.")
-
-
-def _on_log(client, userdata, level, buf):
-    print("client:", client, "userdata:", userdata, "level:", level, "buf", buf)
+DEFAULT_BROKER_ADDRESS = "broker.hivemq.com"
+DEFAULT_MQTT_PORT = 1883
 
 
 class MQTTClient:
 
-    def __init__(self, broker, port) -> None:
+    def __init__(self, broker_address: str = DEFAULT_BROKER_ADDRESS, broker_port: int = DEFAULT_MQTT_PORT, on_connect_callback=None):
+        """
+        :param broker_address: broker address
+        :param broker_port: broker port
+        :param on_connect_callback: listener when client is connected
+        """
         super().__init__()
+        self.broker_address = broker_address
+        self.broker_port = broker_port
+        self._subscriber_callback = None
+        self._on_connect_callback = on_connect_callback
 
-        self.broker = broker
-        self.port = port
-        print("starting mqtt client, broker:", broker, "port:", port)
+        self.client = mqtt.Client()
+        self.client.on_connect = self._on_connect
+        self.client.on_message = self._on_message
 
-        client_id = f'python-mqtt-{random.randint(0, 1000)}'
-        self.client = mqtt_client.Client(client_id)
+    # ----------------------------------------------------------------------------------------
+    # Setup
+    # ----------------------------------------------------------------------------------------
 
     def connect_safe(self, username, password):
+        print(f"Connecting with {self.broker_address}:{self.broker_port}....")
         self.client.username_pw_set(username, password)
-        self.connect()
+        self.client.connect(self.broker_address, self.broker_port, 60)
 
     def connect(self):
-        self._set_callbacks()
-        self.client.connect(host=self.broker, port=self.port)
+        print(f"Connecting with {self.broker_address}:{self.broker_port}....")
+        self.client.connect(self.broker_address, self.broker_port, 60)
 
     def disconnect(self):
+        print(f"Disconnecting with {self.broker_address}:{self.broker_port}....")
         self.client.disconnect()
 
-    def _set_callbacks(self):
-        self.client.on_connect = _on_connect
-        self.client.on_disconnect = _on_disconnect
-        # self.client.on_log = _on_log
+    # ----------------------------------------------------------------------------------------
+    # Internal Methods
+    # ----------------------------------------------------------------------------------------
 
-    def subscribe(self, topic, callback):
-        """
-        example of a callback:
-        def callback(client, userdata, msg):
-             print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        """
-        self.client.on_message = callback
-        self.client.subscribe(topic)
+    def _on_message(self, current_client: mqtt.Client, userdata, msg):
+        _response = msg.payload.decode('utf-8')
+        print(f"Receive topic from {msg.topic}: {_response}")
+        self._subscriber_callback(msg.topic, _response)
 
-    def subscribe_many(self, topics: list[str], callback):
-        topic_array = []
-        for t in topics:
-            topic_array.append((t, 0))
-        self.subscribe(topic=topic_array, callback=callback)
+    def _on_connect(self, current_client: mqtt.Client, userdata, flags, rc):
+        if rc == 0:
+            print("MQTT client is on....")
+            self._on_connect_callback()
+        else:
+            print(f"Failed to connect, return code: {rc}")
 
-    def publish(self, topic, data):
+    # ----------------------------------------------------------------------------------------
+    # Public Methods
+    # ----------------------------------------------------------------------------------------
+
+    def publish(self, topic, data) -> bool:
         result = self.client.publish(topic, data)
         status = result[0]
         if status == 0:
@@ -77,36 +69,37 @@ class MQTTClient:
             print(f"Failed to send message to topic {topic}")
             return False
 
+    def subscribe(self, topic: str, subscriber_callback):
+        """
+        :param topic:
+        :param subscriber_callback: listener when receiving a message mqtt
+        :example: def _subscriber_callback(topic: str, response: str)
+        """
+        print(f"Subscribe topic: {topic}")
+        self._subscriber_callback = subscriber_callback
+        self.client.subscribe(topic)
+
+    def unsubscribe(self, topic: str):
+        self.client.unsubscribe(topic)
+
+    # ----------------------------------------------------------------------------------------
+    # Lifecycle
+    # ----------------------------------------------------------------------------------------
+
     def loop_forever(self):
-        self.client.loop_forever()
+        try:
+            self.client.loop_forever()
+        except KeyboardInterrupt:
+            self.disconnect()
 
     def loop_start(self):
-        self.client.loop_start()
+        try:
+            self.client.loop_start()
+        except KeyboardInterrupt:
+            self.disconnect()
 
     def loop_stop(self):
-        self.client.loop_stop(force=True)
-
-
-# ----------------------------------------------------------------------------------------
-# EXAMPLE
-# ----------------------------------------------------------------------------------------
-'''
-import json
-
-def callback(client, userdata, msg):
-    try:
-        _data = json.loads(msg.payload.decode())
-        print(_data)
-    except Exception as e:
-        print("Error:", userdata, msg, str(e))
-
-
-if __name__ == '__main__':
-    mqtt = MQTTClient(broker=BROKEN_MQTT, port=BROKEN_MQTT_PORT)
-    while True:
-        mqtt.connect()
-        mqtt.loop_start()
-        mqtt.subscribe_many(topics=load_topics(), callback=callback)
-        mqtt.loop_stop()
-        mqtt.disconnect()
-'''
+        try:
+            self.client.loop_stop(force=True)
+        except KeyboardInterrupt:
+            self.disconnect()
