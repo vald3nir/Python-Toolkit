@@ -7,3 +7,7 @@ def create_uuid() -> str:
 
 def format_email_to_key(email: str) -> str:
     return email.replace("@", "_").replace(".", "_")
+
+
+def capitalize_text(text: str) -> str:
+    return " ".join(word.capitalize() for word in text.split())
