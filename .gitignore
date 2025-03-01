@@ -1,3 +1,5 @@
 .idea/
+.qodo/
+.pytest_cache/
 dist/
 *.pyc
