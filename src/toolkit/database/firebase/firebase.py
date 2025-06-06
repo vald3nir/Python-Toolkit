@@ -15,11 +15,11 @@ class Firebase:
         firebase_admin.initialize_app(cred, firebase_config)
         self._db = db
 
-    def insert_or_update(self, path: str, data):
+    def insert_or_update(self, path: str, data: any):
         ref = self._db.reference(path)
         ref.set(data)
 
-    def load(self, path: str):
+    def load(self, path: str) -> list[dict]:
         ref = self._db.reference(path)
         return ref.get()
 
