@@ -2,6 +2,8 @@ import json
 import os
 
 import pandas as pd
+from bson import ObjectId
+from tabulate import tabulate
 
 from . import date_utils as date_utils
 
@@ -60,3 +62,16 @@ def format_time_zone(frame: pd.Series) -> pd.Series:
     _frame = frame.map(lambda x: x.tz_convert(date_utils.LOCAL_TIME_ZONE)).dt.strftime(date_utils.DATE_FORMAT_UTC)
     _frame = _frame.map(lambda x: str(x).replace('"', ""))
     return _frame
+
+
+def object_id_to_datetime(string_id: str):
+    return ObjectId(string_id).generation_time
+
+
+def print_dataframe(df, max_rows=10):
+    if df.empty:
+        return
+    df_to_print = df.head(max_rows)
+    print(tabulate(df_to_print, headers='keys', tablefmt='fancy_grid', showindex=False))
+    if len(df) > max_rows:
+        print(f"\n... ({len(df) - max_rows} linhas adicionais não exibidas)")
