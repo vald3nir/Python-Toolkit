@@ -45,7 +45,6 @@ class MQTTClient:
 
     def _on_message(self, current_client: mqtt.Client, userdata, msg):
         _response = msg.payload.decode('utf-8')
-        print(f"Receive topic from {msg.topic}: {_response}")
         self._subscriber_callback(msg.topic, _response)
 
     def _on_connect(self, current_client: mqtt.Client, userdata, flags, rc):
@@ -63,7 +62,6 @@ class MQTTClient:
         result = self.client.publish(topic, data)
         status = result[0]
         if status == 0:
-            print(f"Send `{data}` to topic `{topic}`")
             return True
         else:
             print(f"Failed to send message to topic {topic}")
@@ -100,6 +98,6 @@ class MQTTClient:
 
     def loop_stop(self):
         try:
-            self.client.loop_stop(force=True)
+            self.client.loop_stop()
         except KeyboardInterrupt:
             self.disconnect()
