@@ -60,7 +60,7 @@ class MongoDAO:
 # Extra Methods
 # ----------------------------------------------------------------------------------------------------------------------
 
-def copy_databases(origin_database_name: str, origin_database_address: str, destination_database_name: str, destination_database_address: str, collections: [str], max_collection_size: int = 100000):
+def copy_databases(origin_database_name: str, origin_database_address: str, destination_database_name: str, destination_database_address: str, collections: list[str] = [], max_collection_size: int = -1):
     origin = pymongo.MongoClient(origin_database_address)[origin_database_name]
     destination = pymongo.MongoClient(destination_database_address)[destination_database_name]
 
@@ -68,8 +68,13 @@ def copy_databases(origin_database_name: str, origin_database_address: str, dest
         collections = origin.list_collection_names()
 
     for collection in collections:
-        collections_cursor = origin[collection].find(limit=max_collection_size)
+        if max_collection_size > 0:
+            collections_cursor = origin[collection].find(limit=max_collection_size)
+        else:
+            collections_cursor = origin[collection].find()
+
         clt = destination[collection]
         clt.drop()
+
         for document in collections_cursor:
             clt.with_options(write_concern=WriteConcern(w=0)).insert_one(document)
