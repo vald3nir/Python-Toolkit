@@ -1,8 +1,9 @@
-'''
+"""
     DOC ref: https://www.mongodb.com/docs/atlas/app-services/data-api/examples/
-'''
+"""
 
 import json
+from typing import Any
 
 import curl
 import requests
@@ -22,7 +23,6 @@ class MongoAPI:
             collection: str,
             print_curl: bool = False
     ) -> None:
-        super().__init__()
         self._api_url = api_url
         self.print_curl = print_curl
         self._headers = {
@@ -30,7 +30,7 @@ class MongoAPI:
             'Access-Control-Request-Headers': '*',
             'api-key': api_key
         }
-        self._base_payload = {
+        self._base_payload: dict[str, Any] = {
             "collection": collection,
             "database": database,
             "dataSource": data_source
@@ -41,28 +41,33 @@ class MongoAPI:
     # ------------------------------------------------------------------------------------------------------------------
 
     def insert_document(self, document: dict):
-        _payload = self._base_payload
+        """Insert a single document into the collection."""
+        _payload = self._base_payload.copy()
         _payload["document"] = document
         self._run_api(payload=json.dumps(_payload), action="insertOne")
 
     def insert_documents(self, documents: list[dict]):
-        _payload = self._base_payload
+        """Insert multiple documents into the collection."""
+        _payload = self._base_payload.copy()
         _payload["documents"] = documents
         self._run_api(payload=json.dumps(_payload), action="insertMany")
 
     def delete_documents(self, query: dict = None):
-        _payload = self._base_payload
+        """Delete documents matching the query from the collection."""
+        _payload = self._base_payload.copy()
         if query is not None:
             _payload["filter"] = query
         self._run_api(payload=json.dumps(_payload), action="deleteMany")
 
     def find_document(self, query: dict) -> dict:
-        _payload = self._base_payload
+        """Find a single document matching the query."""
+        _payload = self._base_payload.copy()
         _payload["filter"] = query
         return self._run_get_document(payload=json.dumps(_payload), action="findOne")
 
     def find_documents(self, query: dict = None, sort: dict = None, limit: int = None) -> list[dict]:
-        _payload = self._base_payload
+        """Find documents matching the query, with optional sort and limit."""
+        _payload = self._base_payload.copy()
         if query is not None:
             _payload["filter"] = query
         if sort is not None:
@@ -71,8 +76,9 @@ class MongoAPI:
             _payload["limit"] = limit
         return self._run_get_documents(payload=json.dumps(_payload), action="find")
 
-    def aggregate(self, pipeline: [dict]) -> list[dict]:
-        _payload = self._base_payload
+    def aggregate(self, pipeline: list[dict]) -> list[dict]:
+        """Perform an aggregation pipeline on the collection."""
+        _payload = self._base_payload.copy()
         _payload["pipeline"] = pipeline
         return self._run_get_documents(payload=json.dumps(_payload), action="aggregate")
 

@@ -1,6 +1,6 @@
 import unittest
 
-from src.toolkit.networking.address import get_local_ip
+from src.toolkit.utils.networking import get_local_ip
 
 
 class AddressTestCase(unittest.TestCase):

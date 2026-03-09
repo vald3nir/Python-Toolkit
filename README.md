@@ -4,35 +4,35 @@ Collection of utility scripts for developing Python projects
 
 ## Overview
 
-    src
+    toolkit/
+    ├── database/
+    │   ├── firebase/
+    │   │   ├── __init__.py
+    │   │   └── firebase.py
+    │   ├── __init__.py
+    │   ├── jsondb/
+    │   │   ├── __init__.py
+    │   │   └── json_db.py
+    │   └── mongodb/
+    │       ├── __init__.py
+    │       ├── mongo_api.py
+    │       └── mongo_dao.py
     ├── __init__.py
-    └── toolkit
-        ├── database
-        │   ├── firebase
-        │   │   ├── firebase.py
-        │   │   └── __init__.py
-        │   ├── __init__.py
-        │   ├── json
-        │   │   ├── collectionDB.py
-        │   │   └── __init__.py
-        │   └── mongodb
-        │       ├── __init__.py
-        │       ├── mongo_api.py
-        │       └── mongo_dao.py
-        ├── __init__.py
-        ├── protocols
-        │   ├── __init__.py
-        │   └── mqtt.py
-        └── utils
-            ├── backup_utils.py
-            ├── converter_utils.py
-            ├── dataset_utils.py
-            ├── date_utils.py
-            ├── __init__.py
-            ├── io_utils.py
-            └── string_utils.py
+    ├── protocols/
+    │   ├── __init__.py
+    │   └── mqtt.py
+    └── utils/
+    ├── __init__.py
+    ├── dataframe_ops.py
+    ├── date_ops.py
+    ├── file_ops.py
+    ├── ip_ops.py
+    ├── json_ops.py
+    ├── pdf_ops.py
+    ├── text_ops.py
+    ├── translation_ops.py
+    └── uuid_ops.py
 
-
-## Donwload Lib 
+## Download Lib
 
 https://pypi.org/project/python-toolkit-vald3nir/
