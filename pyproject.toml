@@ -4,13 +4,33 @@ build-backend = "hatchling.build"
 
 [project]
 name = "python_toolkit_vald3nir"
-version = "2026.1.0"
+version = "2026.1.1"
 authors = [
   { name="Valdenir Severino", email="vald3nir@gmail.com" },
 ]
 description = "Collection of utility scripts for developing Python projects"
 readme = "README.md"
 requires-python = ">=3.8"
+
+# Esta é a seção que estava faltando:
+dependencies = [
+    "firebase-admin==7.2.0",
+    "googletrans==4.0.2",
+    "paho-mqtt==2.1.0",
+    "pandas==3.0.1",
+    "pdfplumber==0.11.9",
+    "pymongo==4.16.0",
+    "pysondb==1.6.7",
+    "requests-to-curl==1.1.0",
+    "tabulate==0.10.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==9.0.2",
+    "pytest-asyncio==1.3.0",
+]
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
