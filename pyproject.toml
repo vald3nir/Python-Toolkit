@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "python_toolkit_vald3nir"
-version = "2026.1.4"
+version = "2026.1.5"
 authors = [
     { name = "Valdenir Severino", email = "vald3nir@gmail.com" },
 ]
@@ -24,6 +24,7 @@ dependencies = [
     "pdfplumber==0.11.9",
     "pymongo==4.16.0",
     "pysondb==1.6.7",
+    "pytz==2026.1",
     "requests-to-curl==1.1.0",
     "tabulate==0.10.0",
 ]
