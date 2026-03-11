@@ -7,8 +7,8 @@ This module provides functions for loading, manipulating, and converting pandas 
 import pandas as pd
 from tabulate import tabulate
 
-from src.toolkit.utils.date_ops import DATE_FORMAT_UTC
-from src.toolkit.utils.date_ops import LOCAL_TIME_ZONE
+LOCAL_TIME_ZONE = 'America/Sao_Paulo'
+DATE_FORMAT_UTC = "%Y-%m-%dT%H:%M:%S.Z"
 
 
 def load_dataframe(file_csv: str) -> pd.DataFrame:
