@@ -6,10 +6,12 @@ Provides convenient methods for CRUD operations and aggregations.
 from typing import Any
 from typing import Dict
 from typing import List
+from typing import Mapping
 from typing import Optional
 
 import pymongo
 from bson import ObjectId
+from pymongo.results import DeleteResult
 
 
 class MongoDAO:
@@ -68,7 +70,7 @@ class MongoDAO:
         """
         self._db.update_many(query, update={"$set": values})
 
-    def find_document(self, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def find_document(self, query: Dict[str, Any]) -> Mapping[str, Any] | None:
         """
         Find a single document.
 
@@ -85,7 +87,7 @@ class MongoDAO:
             query: Optional[Dict[str, Any]] = None,
             sort_field: str = '_id',
             limit: int = 999999999
-    ) -> List[Dict[str, Any]]:
+    ) -> list[Mapping[str, Any]]:
         """
         Find multiple documents.
 
@@ -104,7 +106,7 @@ class MongoDAO:
             query: Optional[Dict[str, Any]] = None,
             sort_field: str = '_id',
             limit: int = 5
-    ) -> List[Dict[str, Any]]:
+    ) -> list[Mapping[str, Any]]:
         """
         Get the last N documents (most recent based on sort_field).
 
@@ -124,23 +126,23 @@ class MongoDAO:
     # Delete Operations
     # ------------------------------------------------------------------------------------------------------------------
 
-    def delete_documents(self, query: Optional[Dict[str, Any]] = None) -> None:
+    def delete_documents(self, query=None) -> DeleteResult:
         """
         Delete documents matching the query.
 
         Args:
             query: Filter to find documents to delete (None deletes all)
         """
-        self._db.delete_many(filter=query)
+        return self._db.delete_many(filter=query)
 
-    def delete_objects(self, _ids: List[ObjectId]) -> None:
+    def delete_objects(self, _ids: List[ObjectId]) -> DeleteResult:
         """
         Delete documents by ObjectId list.
 
         Args:
             _ids: List of ObjectIds to delete
         """
-        self.delete_documents(query={"_id": {"$in": _ids}})
+        return self.delete_documents(query={"_id": {"$in": _ids}})
 
     def clear(self) -> None:
         """Delete all documents from the collection."""
@@ -162,7 +164,7 @@ class MongoDAO:
         """
         return self._db.distinct(key=key)
 
-    def aggregate(self, pipeline: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def aggregate(self, pipeline: List[Dict[str, Any]]) -> list[Mapping[str, Any]]:
         """
         Execute aggregation pipeline.
 
@@ -184,6 +186,15 @@ class MongoDAO:
             Number of documents
         """
         return self._db.count_documents({})
+
+    def count_documents(self, query) -> int:
+        """
+        Get the number of documents in collection.
+
+        Returns:
+            Number of documents
+        """
+        return self._db.count_documents(query)
 
     # ------------------------------------------------------------------------------------------------------------------
     # Connection Management
